@@ -201,14 +201,16 @@
       const email = emailField.value.trim();
       if (!email) return;
 
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyOW-if-2k704jmAFR6as8beQkS6PPzHm0jTVOn-3L56jF7HDzUhdBdGNVsh5M5UMZapw/exec';
+     const scriptBase = 'https://script.google.com/macros/s/AKfycbyOW-if-2k704jmAFR6as8beQkS6PPzHm0jTVOn-3L56jF7HDzUhdBdGNVsh5M5UMZapw/exec';
+     const url = scriptBase + '?v=' + Date.now(); // evita caché
 
-      btn.disabled = true; const old = btn.textContent; btn.textContent = 'Enviando...';
-      fetch(scriptUrl, {
-        method: 'POST',
-        headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: 'email=' + encodeURIComponent(email)
-      })
+     btn.disabled = true; const old = btn.textContent; btn.textContent = 'Enviando...';
+     fetch(url, {
+       method: 'POST',
+       cache: 'no-store',                      // fuerza no usar caché
+       headers: {'Content-Type':'application/x-www-form-urlencoded'},
+       body: 'email=' + encodeURIComponent(email)
+     })
       .then(r => r.text())
       .then(() => {
         emailField.value = '';
